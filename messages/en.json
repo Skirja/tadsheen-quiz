@@ -1,0 +1,54 @@
+{
+    "landing": {
+        "search": {
+            "placeholder": "Search quizzes by title or creator"
+        },
+        "buttons": {
+            "createQuiz": "Create Quiz",
+            "login": "Login"
+        },
+        "sections": {
+            "recentQuizzes": {
+                "title": "Your Recent Quizzes",
+                "noQuizzes": "You haven't taken any quizzes yet"
+            },
+            "popularCategories": {
+                "title": "Popular Categories"
+            }
+        },
+        "quizCard": {
+            "questions": "{count} questions",
+            "attempts": "{count} attempts",
+            "startQuiz": "Start Quiz",
+            "enterName": "Enter your full name",
+            "start": "Start"
+        }
+    },
+    "auth": {
+        "email": "Email",
+        "password": "Password",
+        "fullName": "Full Name",
+        "confirmPassword": "Confirm Password",
+        "forgotPassword": "Forgot password?",
+        "orContinueWith": "Or continue with",
+        "continueWithGoogle": "Continue with Google",
+        "termsText": "By clicking continue, you agree to our",
+        "termsLink": "Terms of Service",
+        "and": "and",
+        "privacyLink": "Privacy Policy",
+        "signIn": {
+            "title": "Welcome back",
+            "subtitle": "Sign in to your account",
+            "action": "Sign in",
+            "noAccount": "Don't have an account?",
+            "signUpLink": "Sign up"
+        },
+        "signUp": {
+            "title": "Create an account",
+            "subtitle": "Sign up to get started",
+            "action": "Sign up",
+            "haveAccount": "Already have an account?",
+            "signInLink": "Sign in"
+        }
+    }
+}

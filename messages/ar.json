@@ -1,0 +1,54 @@
+{
+    "landing": {
+        "search": {
+            "placeholder": "ابحث عن الاختبارات حسب العنوان أو المنشئ"
+        },
+        "buttons": {
+            "createQuiz": "إنشاء اختبار",
+            "login": "تسجيل الدخول"
+        },
+        "sections": {
+            "recentQuizzes": {
+                "title": "اختباراتك الأخيرة",
+                "noQuizzes": "لم تقم بأي اختبارات بعد"
+            },
+            "popularCategories": {
+                "title": "الفئات الشائعة"
+            }
+        },
+        "quizCard": {
+            "questions": "{count} سؤال",
+            "attempts": "{count} محاولة",
+            "startQuiz": "ابدأ الاختبار",
+            "enterName": "أدخل اسمك الكامل",
+            "start": "ابدأ"
+        }
+    },
+    "auth": {
+        "email": "البريد الإلكتروني",
+        "password": "كلمة المرور",
+        "fullName": "الاسم الكامل",
+        "confirmPassword": "تأكيد كلمة المرور",
+        "forgotPassword": "نسيت كلمة المرور؟",
+        "orContinueWith": "أو تابع باستخدام",
+        "continueWithGoogle": "تابع باستخدام جوجل",
+        "termsText": "بالنقر على متابعة، فإنك توافق على",
+        "termsLink": "شروط الخدمة",
+        "and": "و",
+        "privacyLink": "سياسة الخصوصية",
+        "signIn": {
+            "title": "مرحباً بعودتك",
+            "subtitle": "سجل دخول إلى حسابك",
+            "action": "تسجيل الدخول",
+            "noAccount": "ليس لديك حساب؟",
+            "signUpLink": "إنشاء حساب"
+        },
+        "signUp": {
+            "title": "إنشاء حساب",
+            "subtitle": "سجل للبدء",
+            "action": "إنشاء حساب",
+            "haveAccount": "لديك حساب بالفعل؟",
+            "signInLink": "تسجيل الدخول"
+        }
+    }
+}
