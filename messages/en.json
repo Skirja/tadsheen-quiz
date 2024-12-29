@@ -41,7 +41,8 @@
             "subtitle": "Sign in to your account",
             "action": "Sign in",
             "noAccount": "Don't have an account?",
-            "signUpLink": "Sign up"
+            "signUpLink": "Sign up",
+            "forgotPasswordLink": "Forgot password?"
         },
         "signUp": {
             "title": "Create an account",
@@ -49,6 +50,14 @@
             "action": "Sign up",
             "haveAccount": "Already have an account?",
             "signInLink": "Sign in"
+        },
+        "forgotPassword": {
+            "title": "Reset your password",
+            "subtitle": "Enter your email address and we'll send you a link to reset your password",
+            "action": "Send reset link",
+            "backToSignIn": "Back to sign in",
+            "success": "If an account exists with that email, we've sent a password reset link",
+            "error": "Failed to send reset link. Please try again."
         }
     }
 }

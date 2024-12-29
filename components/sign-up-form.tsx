@@ -97,9 +97,9 @@ export function SignUpForm({
             </Card>
             <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
                 {t("termsText")}{" "}
-                <Link href={`/${locale}/terms`}>{t("termsLink")}</Link>{" "}
+                <Link href={`/${locale}/sign-up`}>{t("termsLink")}</Link>{" "}
                 {t("and")}{" "}
-                <Link href={`/${locale}/privacy`}>{t("privacyLink")}</Link>.
+                <Link href={`/${locale}/sign-up`}>{t("privacyLink")}</Link>.
             </div>
         </div>
     )

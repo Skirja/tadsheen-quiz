@@ -46,7 +46,7 @@ export function SignInForm({
                     href={`/${locale}/forgot-password`}
                     className="ml-auto text-sm underline-offset-2 hover:underline"
                   >
-                    {t("forgotPassword")}
+                    {t("signIn.forgotPasswordLink")}
                   </Link>
                 </div>
                 <Input id="password" type="password" required />
@@ -92,9 +92,9 @@ export function SignInForm({
       </Card>
       <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
         {t("termsText")}{" "}
-        <Link href={`/${locale}/terms`}>{t("termsLink")}</Link>{" "}
+        <Link href={`/${locale}/sign-in`}>{t("termsLink")}</Link>{" "}
         {t("and")}{" "}
-        <Link href={`/${locale}/privacy`}>{t("privacyLink")}</Link>.
+        <Link href={`/${locale}/sign-in`}>{t("privacyLink")}</Link>.
       </div>
     </div>
   )
