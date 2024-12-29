@@ -29,7 +29,6 @@
         "password": "Password",
         "fullName": "Full Name",
         "confirmPassword": "Confirm Password",
-        "forgotPassword": "Forgot password?",
         "orContinueWith": "Or continue with",
         "continueWithGoogle": "Continue with Google",
         "termsText": "By clicking continue, you agree to our",
@@ -40,16 +39,36 @@
             "title": "Welcome back",
             "subtitle": "Sign in to your account",
             "action": "Sign in",
+            "loading": "Signing in...",
             "noAccount": "Don't have an account?",
             "signUpLink": "Sign up",
-            "forgotPasswordLink": "Forgot password?"
+            "forgotPasswordLink": "Forgot password?",
+            "rememberMe": "Remember me for 15 days",
+            "success": "Successfully signed in!",
+            "errors": {
+                "invalidCredentials": "Invalid email or password",
+                "emailNotConfirmed": "Please verify your email first",
+                "default": "Something went wrong. Please try again."
+            }
         },
         "signUp": {
             "title": "Create an account",
             "subtitle": "Sign up to get started",
             "action": "Sign up",
+            "loading": "Verifying your email...",
+            "verifyingEmail": "Please wait while we verify your email address.",
             "haveAccount": "Already have an account?",
-            "signInLink": "Sign in"
+            "signInLink": "Sign in",
+            "success": "Email verified successfully! You can now sign in.",
+            "resendAction": "Resend verification email",
+            "resendSuccess": "Verification email has been resent. Please check your inbox.",
+            "resendError": "Failed to resend verification email. Please try again.",
+            "errors": {
+                "passwordMismatch": "Passwords do not match",
+                "emailExists": "An account with this email already exists",
+                "verificationFailed": "Email verification failed or link has expired",
+                "default": "Something went wrong. Please try again."
+            }
         },
         "forgotPassword": {
             "title": "Reset your password",
@@ -58,6 +77,29 @@
             "backToSignIn": "Back to sign in",
             "success": "If an account exists with that email, we've sent a password reset link",
             "error": "Failed to send reset link. Please try again."
+        }
+    },
+    "dashboard": {
+        "title": "Quiz Builder",
+        "subtitle": "Create and manage your quizzes",
+        "createQuiz": "Create Quiz",
+        "header": {
+            "landingPage": "Landing Page",
+            "logout": "Logout",
+            "logoutSuccess": "Successfully logged out",
+            "logoutError": "Failed to logout. Please try again."
+        },
+        "quizCard": {
+            "active": "Active",
+            "inactive": "Inactive",
+            "participants": "{count} participants",
+            "created": "Created {timeAgo}",
+            "edit": "Edit",
+            "stats": "Stats"
+        },
+        "emptyState": {
+            "title": "No quizzes yet",
+            "description": "Create your first quiz to get started"
         }
     }
 }
