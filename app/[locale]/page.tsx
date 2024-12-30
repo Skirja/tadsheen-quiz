@@ -45,10 +45,19 @@ interface DatabaseQuiz {
     };
 }
 
-interface DatabaseQuizAttempt {
+interface DatabaseQuizAttemptResponse {
     quiz_id: string;
     score: number;
-    quiz: DatabaseQuiz;
+    quiz: {
+        id: string;
+        title: string;
+        description: string;
+        thumbnail_url: string | null;
+        is_active: boolean;
+        created_at: string;
+        questions: Question[];
+        total_attempts: number;
+    };
 }
 
 interface Category {
@@ -95,7 +104,6 @@ export default function LandingPage() {
 
     useEffect(() => {
         const fetchQuizzes = async () => {
-            // Skip fetching if we're in search mode
             if (isSearching) {
                 return;
             }
@@ -103,7 +111,6 @@ export default function LandingPage() {
             try {
                 const supabase = createClient();
 
-                // Fetch user's recent quiz attempts if logged in
                 let userRecentQuizzes: Quiz[] = [];
                 if (user) {
                     const { data } = await supabase
@@ -128,7 +135,7 @@ export default function LandingPage() {
                         .limit(3);
 
                     if (data) {
-                        const attempts = data as unknown as DatabaseQuizAttempt[];
+                        const attempts = data as unknown[] as DatabaseQuizAttemptResponse[];
                         userRecentQuizzes = attempts.map(attempt => ({
                             ...attempt.quiz,
                             questions: attempt.quiz.questions || [],
@@ -184,7 +191,7 @@ export default function LandingPage() {
                                     _count: {
                                         quiz_attempts: quiz.total_attempts
                                     }
-                                } as DatabaseQuiz))
+                                }))
                                 .slice(0, 4);
 
                             return {
@@ -203,6 +210,7 @@ export default function LandingPage() {
                     }
                 }
             } catch {
+                // Handle error silently
             } finally {
                 setIsLoading(false);
             }
@@ -238,25 +246,28 @@ export default function LandingPage() {
                 `)
                 .eq('is_active', true)
                 .eq('status', 'published')
-                .ilike('title', `%${searchTerm}%`)
+                .or(`title.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`)
                 .order('total_attempts', { ascending: false });
 
-            const formattedResults = (searchData || []).map(quiz => ({
-                id: quiz.id,
-                title: quiz.title,
-                description: quiz.description,
-                thumbnail_url: quiz.thumbnail_url,
-                is_active: quiz.is_active,
-                created_at: quiz.created_at,
-                questions: quiz.questions || [],
-                _count: {
-                    quiz_attempts: quiz.total_attempts || 0
-                }
-            }));
+            if (searchData) {
+                const formattedResults = searchData.map(quiz => ({
+                    id: quiz.id,
+                    title: quiz.title,
+                    description: quiz.description,
+                    thumbnail_url: quiz.thumbnail_url,
+                    is_active: quiz.is_active,
+                    created_at: quiz.created_at,
+                    questions: quiz.questions || [],
+                    _count: {
+                        quiz_attempts: quiz.total_attempts || 0
+                    }
+                }));
 
-            setSearchResults(formattedResults);
+                setSearchResults(formattedResults);
+            } else {
+                setSearchResults([]);
+            }
         } catch {
-            // Handle error silently
             setSearchResults([]);
         }
     };

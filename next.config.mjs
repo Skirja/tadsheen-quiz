@@ -13,6 +13,9 @@ const nextConfig = {
             },
         ],
     },
+    experimental: {
+        missingSuspenseWithCSRError: false
+    }
 };
 
 export default withNextIntl(nextConfig);

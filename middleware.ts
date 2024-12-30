@@ -15,7 +15,8 @@ async function middleware(request: NextRequest) {
     const intlMiddleware = createMiddleware({
         locales,
         defaultLocale,
-        localePrefix: 'always'
+        localePrefix: 'always',
+        localeDetection: false
     });
 
     const response = await intlMiddleware(request);

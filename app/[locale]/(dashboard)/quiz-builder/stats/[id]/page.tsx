@@ -44,26 +44,23 @@ export default function QuizStatsPage() {
                 const supabase = createClient();
 
                 // Fetch quiz data
-                const { data: quizData, error: quizError } = await supabase
+                const { data: quizData } = await supabase
                     .from('quizzes')
                     .select('id, title, total_attempts')
                     .eq('id', quizId)
                     .single();
 
-                if (quizError) throw quizError;
                 if (!quizData) throw new Error('Quiz not found');
 
                 setQuiz(quizData);
 
                 // Fetch attempts data
-                const { data: attemptsData, error: attemptsError } = await supabase
+                const { data: attemptsData } = await supabase
                     .from('quiz_attempts')
                     .select('id, user_full_name, score, created_at')
                     .eq('quiz_id', quizId)
                     .eq('status', 'completed')
                     .order('created_at', { ascending: false });
-
-                if (attemptsError) throw attemptsError;
 
                 setAttempts(attemptsData || []);
             } catch {

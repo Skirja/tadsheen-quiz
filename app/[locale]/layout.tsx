@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "sonner";
+import { unstable_setRequestLocale } from 'next-intl/server';
 
 export function generateStaticParams() {
     return [{ locale: "en" }, { locale: "ar" }];
@@ -14,6 +15,8 @@ export default async function LocaleLayout({
     children: React.ReactNode;
     params: { locale: string };
 }) {
+    unstable_setRequestLocale(locale);
+
     let messages;
     try {
         messages = (await import(`../../messages/${locale}.json`)).default;
