@@ -34,7 +34,7 @@ export function QuizStartDialog({
 
     const handleStart = () => {
         if (!isLoggedIn && !name.trim()) return;
-        onStart(name);
+        onStart(name.trim());
         onClose();
     };
 
@@ -42,11 +42,10 @@ export function QuizStartDialog({
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>{title}</DialogTitle>
-                    <DialogDescription>
-                        {t("startQuiz")}
-                    </DialogDescription>
+                    <DialogTitle>{t("startQuiz")}</DialogTitle>
+                    <DialogDescription>{title}</DialogDescription>
                 </DialogHeader>
+
                 {!isLoggedIn && (
                     <div className="grid gap-4 py-4">
                         <div className="grid gap-2">
@@ -60,6 +59,7 @@ export function QuizStartDialog({
                         </div>
                     </div>
                 )}
+
                 <DialogFooter>
                     <Button onClick={handleStart} disabled={!isLoggedIn && !name.trim()}>
                         {t("start")}

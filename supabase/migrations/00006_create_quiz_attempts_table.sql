@@ -110,25 +110,14 @@ CREATE POLICY "Users can view their own attempts" ON quiz_attempts
     USING (
         CASE
             WHEN auth.uid() IS NOT NULL THEN user_id = auth.uid()
-            ELSE id IN (
-                SELECT attempt_id FROM quiz_responses
-                WHERE attempt_id = quiz_attempts.id
-                AND created_at > CURRENT_TIMESTAMP - INTERVAL '1 hour'
-            )
+            ELSE created_at > CURRENT_TIMESTAMP - INTERVAL '1 hour'
         END
     );
 
 -- Anyone can insert an attempt
 CREATE POLICY "Anyone can start a quiz attempt" ON quiz_attempts
     FOR INSERT
-    WITH CHECK (
-        EXISTS (
-            SELECT 1 FROM quizzes
-            WHERE quizzes.id = quiz_id
-            AND quizzes.status = 'published'
-            AND quizzes.is_active = true
-        )
-    );
+    WITH CHECK (true);
 
 -- Users can update their own incomplete attempts
 CREATE POLICY "Users can update their own attempts" ON quiz_attempts
@@ -136,14 +125,8 @@ CREATE POLICY "Users can update their own attempts" ON quiz_attempts
     USING (
         CASE
             WHEN auth.uid() IS NOT NULL THEN user_id = auth.uid()
-            ELSE id IN (
-                SELECT attempt_id FROM quiz_responses
-                WHERE attempt_id = quiz_attempts.id
-                AND created_at > CURRENT_TIMESTAMP - INTERVAL '1 hour'
-            )
+            ELSE created_at > CURRENT_TIMESTAMP - INTERVAL '1 hour'
         END
-        AND status = 'in_progress'
-        AND CURRENT_TIMESTAMP < expires_at
     );
 
 -- Policies for quiz_responses
@@ -176,23 +159,10 @@ CREATE POLICY "Users can view their own responses" ON quiz_responses
         )
     );
 
--- Users can insert responses for their attempts
-CREATE POLICY "Users can insert their own responses" ON quiz_responses
+-- Anyone can insert responses
+CREATE POLICY "Anyone can insert responses" ON quiz_responses
     FOR INSERT
-    WITH CHECK (
-        EXISTS (
-            SELECT 1 FROM quiz_attempts
-            WHERE quiz_attempts.id = attempt_id
-            AND quiz_attempts.status = 'in_progress'
-            AND CURRENT_TIMESTAMP < quiz_attempts.expires_at
-            AND (
-                CASE
-                    WHEN auth.uid() IS NOT NULL THEN quiz_attempts.user_id = auth.uid()
-                    ELSE quiz_attempts.created_at > CURRENT_TIMESTAMP - INTERVAL '1 hour'
-                END
-            )
-        )
-    );
+    WITH CHECK (true);
 
 -- Create indexes
 CREATE INDEX quiz_attempts_quiz_id_idx ON quiz_attempts(quiz_id);

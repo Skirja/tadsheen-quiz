@@ -83,6 +83,10 @@ CREATE POLICY "Creators can insert answers in their quizzes" ON answers
         )
     );
 
+-- Create extension if not exists for text search
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
 -- Create indexes
 CREATE INDEX answers_question_id_idx ON answers(question_id);
 CREATE INDEX answers_question_id_order_idx ON answers(question_id, order_number); 
+CREATE INDEX answers_answer_text_idx ON answers USING gin(answer_text gin_trgm_ops); 

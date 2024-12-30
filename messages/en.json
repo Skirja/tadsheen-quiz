@@ -24,6 +24,37 @@
             "start": "Start"
         }
     },
+    "quiz": {
+        "loading": "Loading quiz...",
+        "question": "Question",
+        "previousQuestion": "Previous Question",
+        "nextQuestion": "Next Question",
+        "submit": "Submit Quiz",
+        "submitting": "Submitting...",
+        "submitSuccess": "Quiz submitted successfully!",
+        "longAnswerPlaceholder": "Type your answer here...",
+        "errors": {
+            "loadError": "Failed to load quiz. Please try again.",
+            "submitError": "Failed to submit quiz. Please try again.",
+            "notFound": "Quiz not found"
+        }
+    },
+    "quizResults": {
+        "loading": "Loading results...",
+        "score": "Your Score",
+        "completedBy": "Completed by {name}",
+        "question": "Question",
+        "correct": "Correct",
+        "incorrect": "Incorrect",
+        "yourAnswer": "Your Answer",
+        "referenceAnswer": "Reference Answer",
+        "backToHome": "Back to Home",
+        "retakeQuiz": "Retake Quiz",
+        "errors": {
+            "loadError": "Failed to load results. Please try again.",
+            "notFound": "Results not found"
+        }
+    },
     "auth": {
         "email": "Email",
         "password": "Password",
@@ -83,6 +114,9 @@
         "title": "Quiz Builder",
         "subtitle": "Create and manage your quizzes",
         "createQuiz": "Create Quiz",
+        "error": {
+            "fetchQuizzes": "Failed to fetch quizzes. Please try again."
+        },
         "header": {
             "landingPage": "Landing Page",
             "logout": "Logout",
@@ -100,6 +134,111 @@
         "emptyState": {
             "title": "No quizzes yet",
             "description": "Create your first quiz to get started"
+        },
+        "createQuiz": {
+            "title": "Create Quiz",
+            "subtitle": "Create a new quiz with questions and answers",
+            "saveAsDraft": "Save as Draft",
+            "preview": "Preview",
+            "publish": "Publish",
+            "publishing": "Publishing...",
+            "draftSaved": "Draft saved successfully",
+            "saveDraftError": "Failed to save draft",
+            "quizPublished": "Quiz published successfully",
+            "publishError": "Failed to publish quiz",
+            "form": {
+                "title": "Quiz Title",
+                "titleDescription": "Give your quiz a descriptive title (max 100 characters)",
+                "description": "Description",
+                "descriptionDescription": "Describe what your quiz is about (max 500 characters)",
+                "category": "Category",
+                "selectCategory": "Select a category",
+                "thumbnail": "Thumbnail",
+                "thumbnailDescription": "Upload a thumbnail image for your quiz",
+                "active": "Active",
+                "activeDescription": "Make this quiz available to users",
+                "questions": "Questions",
+                "addSingleChoice": "Add Single Choice",
+                "addMultipleChoice": "Add Multiple Choice",
+                "addLongAnswer": "Add Long Answer",
+                "singleChoice": "Single Choice Question",
+                "multipleChoice": "Multiple Choice Question",
+                "longAnswer": "Long Answer Question",
+                "questionText": "Question Text",
+                "questionPlaceholder": "Enter your question here",
+                "questionImage": "Question Image",
+                "options": "Answer Options",
+                "addOption": "Add Option",
+                "optionPlaceholder": "Enter option text",
+                "dragAndDrop": "Drag and drop image here",
+                "dropHere": "Drop image here",
+                "or": "or",
+                "browseFiles": "Browse files",
+                "referenceAnswer": "Reference Answer",
+                "referenceAnswerPlaceholder": "Enter the reference answer for grading",
+                "referenceAnswerDescription": "This answer will be used as a reference for grading long answer responses. Include key points that should be present in a correct answer.",
+                "validation": {
+                    "titleRequired": "Title is required",
+                    "descriptionRequired": "Description is required",
+                    "categoryRequired": "Category is required",
+                    "minQuestions": "Add at least one question",
+                    "questionTextRequired": "Question text is required",
+                    "minOptions": "Add at least two options",
+                    "correctAnswer": "Select at least one correct answer"
+                }
+            },
+            "loading": "Loading...",
+            "backToEdit": "Back to Edit",
+            "question": "Question",
+            "previousQuestion": "Previous Question",
+            "nextQuestion": "Next Question",
+            "longAnswerPlaceholder": "Type your answer here...",
+            "previewNotice": "Preview Mode: Changes will only be applied when you save the quiz.",
+            "previewError": "Error loading preview data. Redirecting back to editor."
+        },
+        "editQuiz": {
+            "title": "Edit Quiz",
+            "subtitle": "Update your quiz details and questions",
+            "loadError": "Failed to load quiz data",
+            "deleteError": "Failed to delete quiz",
+            "quizDeleted": "Quiz deleted successfully",
+            "loading": "Loading...",
+            "deleteQuiz": "Delete Quiz",
+            "deleteConfirm": "Are you sure you want to delete this quiz?",
+            "form": {
+                "active": "Active",
+                "activeDescription": "Make this quiz available to users",
+                "title": "Title",
+                "titleDescription": "Give your quiz a descriptive title",
+                "description": "Description",
+                "descriptionDescription": "Describe what your quiz is about",
+                "category": "Category",
+                "selectCategory": "Select a category",
+                "thumbnail": "Thumbnail",
+                "thumbnailDescription": "Upload a thumbnail image for your quiz",
+                "questions": "Questions",
+                "questionText": "Question Text",
+                "questionPlaceholder": "Enter your question here",
+                "questionImage": "Question Image",
+                "options": "Options",
+                "addOption": "Add Option",
+                "optionPlaceholder": "Enter option text",
+                "referenceAnswer": "Reference Answer",
+                "referenceAnswerPlaceholder": "Enter the reference answer",
+                "referenceAnswerDescription": "This will be used to evaluate long answers",
+                "singleChoice": "Single Choice",
+                "multipleChoice": "Multiple Choice",
+                "longAnswer": "Long Answer",
+                "addSingleChoice": "Add Single Choice",
+                "addMultipleChoice": "Add Multiple Choice",
+                "addLongAnswer": "Add Long Answer",
+                "dragAndDrop": "Drag and drop image here",
+                "dropHere": "Drop image here",
+                "or": "or",
+                "browseFiles": "Browse files",
+                "uploading": "Uploading...",
+                "imageUploadError": "Failed to upload image"
+            }
         }
     }
 }

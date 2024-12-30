@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { SearchBar } from "@/components/search-bar";
@@ -7,95 +8,218 @@ import { QuizCard } from "@/components/quiz-card";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
 import { LanguageToggle } from "@/components/language-toggle";
+import { createClient } from "@/utils/supabase/client";
+import { useParams } from "next/navigation";
+import { User } from "@supabase/supabase-js";
 
-// Mock data - replace with actual data from your backend
-const recentQuizzes = [
-    {
-        id: 1,
-        title: "Basic Mathematics",
-        thumbnail: "/images/math.jpg",
-        questionsCount: 10,
-        attemptsCount: 150,
-        userScore: 85,
-    },
-    {
-        id: 2,
-        title: "Advanced Physics",
-        thumbnail: "/images/physics.jpg",
-        questionsCount: 15,
-        attemptsCount: 120,
-        userScore: 92,
-    },
-    {
-        id: 3,
-        title: "Chemistry Basics",
-        thumbnail: "/images/chemistry.jpg",
-        questionsCount: 12,
-        attemptsCount: 200,
-        userScore: 78,
-    },
-];
+interface Question {
+    id: string;
+}
 
-const popularCategories = [
-    {
-        id: 1,
-        name: "Mathematics",
-        quizzes: [
-            {
-                id: 1,
-                title: "Algebra Fundamentals",
-                thumbnail: "/images/algebra.jpg",
-                questionsCount: 8,
-                attemptsCount: 300,
-            },
-            {
-                id: 2,
-                title: "Geometry Basics",
-                thumbnail: "/images/geometry.jpg",
-                questionsCount: 12,
-                attemptsCount: 250,
-            },
-            {
-                id: 3,
-                title: "Calculus Introduction",
-                thumbnail: "/images/calculus.jpg",
-                questionsCount: 15,
-                attemptsCount: 180,
-            },
-            {
-                id: 4,
-                title: "Statistics 101",
-                thumbnail: "/images/statistics.jpg",
-                questionsCount: 10,
-                attemptsCount: 220,
-            },
-        ],
-    },
-    // Add more categories here (max 4)
-];
+interface Quiz {
+    id: string;
+    title: string;
+    description: string;
+    thumbnail_url: string | null;
+    is_active: boolean;
+    created_at: string;
+    questions: Question[];
+    _count: {
+        quiz_attempts: number;
+    };
+    user_score?: number;
+}
 
-const isLoggedIn = false; // Replace with actual auth state
+interface DatabaseQuiz {
+    id: string;
+    title: string;
+    description: string;
+    thumbnail_url: string | null;
+    is_active: boolean;
+    created_at: string;
+    category_id: string;
+    total_attempts: number;
+    questions: Question[];
+    _count: {
+        quiz_attempts: number;
+    };
+}
+
+interface DatabaseQuizAttempt {
+    quiz_id: string;
+    score: number;
+    quiz: DatabaseQuiz;
+}
+
+interface DatabaseQuizCategory {
+    id: string;
+    name: string;
+    quizzes: DatabaseQuiz[];
+}
+
+interface Category {
+    id: string;
+    name: string;
+    quizzes: Quiz[];
+}
 
 export default function LandingPage() {
     const t = useTranslations("landing");
     const router = useRouter();
+    const params = useParams();
+    const locale = params.locale as string;
+    const [recentQuizzes, setRecentQuizzes] = useState<Quiz[]>([]);
+    const [popularCategories, setPopularCategories] = useState<Category[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [user, setUser] = useState<User | null>(null);
+
+    useEffect(() => {
+        const supabase = createClient();
+
+        // Get initial auth state
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            setUser(session?.user ?? null);
+        });
+
+        // Listen for auth changes
+        const {
+            data: { subscription },
+        } = supabase.auth.onAuthStateChange((_event, session) => {
+            setUser(session?.user ?? null);
+        });
+
+        return () => subscription.unsubscribe();
+    }, []);
+
+    useEffect(() => {
+        const fetchQuizzes = async () => {
+            try {
+                const supabase = createClient();
+
+                // Fetch user's recent quiz attempts if logged in
+                let userRecentQuizzes: Quiz[] = [];
+                if (user) {
+                    const { data } = await supabase
+                        .from('quiz_attempts')
+                        .select(`
+                            quiz_id,
+                            score,
+                            quiz:quizzes (
+                                id,
+                                title,
+                                description,
+                                thumbnail_url,
+                                is_active,
+                                created_at,
+                                questions!inner (id),
+                                total_attempts
+                            )
+                        `)
+                        .eq('user_id', user.id)
+                        .eq('status', 'completed')
+                        .order('created_at', { ascending: false })
+                        .limit(3);
+
+                    if (data) {
+                        const attempts = data as unknown as DatabaseQuizAttempt[];
+                        userRecentQuizzes = attempts.map(attempt => ({
+                            ...attempt.quiz,
+                            questions: attempt.quiz.questions || [],
+                            _count: {
+                                quiz_attempts: attempt.quiz.total_attempts || 0
+                            },
+                            user_score: attempt.score
+                        }));
+                    }
+                }
+
+                setRecentQuizzes(userRecentQuizzes);
+
+                // First, fetch all active and published quizzes
+                const { data: activeQuizzes } = await supabase
+                    .from('quizzes')
+                    .select(`
+                        id,
+                        title,
+                        description,
+                        thumbnail_url,
+                        is_active,
+                        created_at,
+                        category_id,
+                        total_attempts,
+                        questions!inner (id)
+                    `)
+                    .eq('is_active', true)
+                    .eq('status', 'published')
+                    .order('total_attempts', { ascending: false });
+
+                if (activeQuizzes) {
+                    // Then, fetch all categories
+                    const { data: categories } = await supabase
+                        .from('quiz_categories')
+                        .select('id, name')
+                        .order('name');
+
+                    if (categories) {
+                        // Group quizzes by category
+                        const quizzesByCategory = categories.map(category => {
+                            const categoryQuizzes = (activeQuizzes as any[])
+                                .filter(quiz => quiz.category_id === category.id)
+                                .map(quiz => ({
+                                    id: quiz.id,
+                                    title: quiz.title,
+                                    description: quiz.description,
+                                    thumbnail_url: quiz.thumbnail_url,
+                                    is_active: quiz.is_active,
+                                    created_at: quiz.created_at,
+                                    category_id: quiz.category_id,
+                                    questions: quiz.questions,
+                                    _count: {
+                                        quiz_attempts: quiz.total_attempts
+                                    }
+                                } as DatabaseQuiz))
+                                .slice(0, 4); // Get top 4 quizzes per category
+
+                            return {
+                                id: category.id,
+                                name: category.name,
+                                quizzes: categoryQuizzes
+                            };
+                        });
+
+                        // Only keep categories that have quizzes
+                        const categoriesWithQuizzes = quizzesByCategory
+                            .filter(category => category.quizzes.length > 0)
+                            .slice(0, 4); // Get top 4 categories
+
+                        setPopularCategories(categoriesWithQuizzes);
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching quizzes:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchQuizzes();
+    }, [user]); // Re-fetch when user changes
 
     const handleSearch = (query: string) => {
         // Implement search functionality
         console.log("Searching for:", query);
     };
 
-    const handleStartQuiz = (quizId: number, name?: string) => {
-        if (!isLoggedIn && !name) return;
-        // Implement quiz start functionality
-        console.log("Starting quiz:", quizId, "with name:", name);
+    const handleStartQuiz = (quizId: string, name?: string) => {
+        if (!user && !name) return;
+        router.push(`/${locale}/quiz/${quizId}?name=${encodeURIComponent(name || user?.user_metadata?.full_name || '')}`);
     };
 
     const handleCreateQuiz = () => {
-        if (!isLoggedIn) {
-            router.push("/en/sign-in"); // Change based on current locale
+        if (!user) {
+            router.push(`/${locale}/sign-in`);
         } else {
-            router.push("/en/quiz-builder"); // Change based on current locale
+            router.push(`/${locale}/quiz-builder/`);
         }
     };
 
@@ -119,35 +243,31 @@ export default function LandingPage() {
 
             {/* Main Content */}
             <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-                {/* Recent Quizzes Section */}
-                <section className="mb-12">
-                    <h2 className="mb-6 text-2xl font-bold">
-                        {t("sections.recentQuizzes.title")}
-                    </h2>
-                    {recentQuizzes.length > 0 ? (
+                {/* Recent Quizzes Section - Only show if user has taken quizzes */}
+                {recentQuizzes.length > 0 && (
+                    <section className="mb-12">
+                        <h2 className="mb-6 text-2xl font-bold">
+                            {t("sections.recentQuizzes.title")}
+                        </h2>
                         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                             {recentQuizzes.map((quiz) => (
                                 <QuizCard
                                     key={quiz.id}
                                     title={quiz.title}
-                                    thumbnail={quiz.thumbnail}
-                                    questionsCount={quiz.questionsCount}
-                                    attemptsCount={quiz.attemptsCount}
-                                    userScore={quiz.userScore}
+                                    thumbnail={quiz.thumbnail_url || '/images/placeholder.jpg'}
+                                    questionsCount={quiz.questions.length}
+                                    attemptsCount={quiz._count.quiz_attempts}
                                     onStart={(name) => handleStartQuiz(quiz.id, name)}
-                                    isLoggedIn={isLoggedIn}
+                                    isLoggedIn={!!user}
+                                    userScore={quiz.user_score}
                                 />
                             ))}
                         </div>
-                    ) : (
-                        <p className="text-muted-foreground">
-                            {t("sections.recentQuizzes.noQuizzes")}
-                        </p>
-                    )}
-                </section>
+                    </section>
+                )}
 
                 {/* Popular Categories Sections */}
-                {popularCategories.map((category) => (
+                {!isLoading && popularCategories.map((category) => (
                     <section key={category.id} className="mb-12">
                         <h2 className="mb-6 text-2xl font-bold">
                             {category.name}
@@ -157,11 +277,11 @@ export default function LandingPage() {
                                 <QuizCard
                                     key={quiz.id}
                                     title={quiz.title}
-                                    thumbnail={quiz.thumbnail}
-                                    questionsCount={quiz.questionsCount}
-                                    attemptsCount={quiz.attemptsCount}
+                                    thumbnail={quiz.thumbnail_url || '/images/placeholder.jpg'}
+                                    questionsCount={quiz.questions.length}
+                                    attemptsCount={quiz._count.quiz_attempts}
                                     onStart={(name) => handleStartQuiz(quiz.id, name)}
-                                    isLoggedIn={isLoggedIn}
+                                    isLoggedIn={!!user}
                                 />
                             ))}
                         </div>

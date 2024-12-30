@@ -24,6 +24,37 @@
             "start": "ابدأ"
         }
     },
+    "quiz": {
+        "loading": "جاري تحميل الاختبار...",
+        "question": "السؤال",
+        "previousQuestion": "السؤال السابق",
+        "nextQuestion": "السؤال التالي",
+        "submit": "إرسال الاختبار",
+        "submitting": "جاري الإرسال...",
+        "submitSuccess": "تم إرسال الاختبار بنجاح!",
+        "longAnswerPlaceholder": "اكتب إجابتك هنا...",
+        "errors": {
+            "loadError": "فشل في تحميل الاختبار. يرجى المحاولة مرة أخرى.",
+            "submitError": "فشل في إرسال الاختبار. يرجى المحاولة مرة أخرى.",
+            "notFound": "الاختبار غير موجود"
+        }
+    },
+    "quizResults": {
+        "loading": "جاري تحميل النتائج...",
+        "score": "نتيجتك",
+        "completedBy": "تم الإكمال بواسطة {name}",
+        "question": "السؤال",
+        "correct": "صحيح",
+        "incorrect": "غير صحيح",
+        "yourAnswer": "إجابتك",
+        "referenceAnswer": "الإجابة المرجعية",
+        "backToHome": "العودة للرئيسية",
+        "retakeQuiz": "إعادة الاختبار",
+        "errors": {
+            "loadError": "فشل في تحميل النتائج. يرجى المحاولة مرة أخرى.",
+            "notFound": "النتائج غير موجودة"
+        }
+    },
     "auth": {
         "email": "البريد الإلكتروني",
         "password": "كلمة المرور",
@@ -82,7 +113,70 @@
     "dashboard": {
         "title": "منشئ الاختبارات",
         "subtitle": "إنشاء وإدارة اختباراتك",
-        "createQuiz": "إنشاء اختبار",
+        "error": {
+            "fetchQuizzes": "فشل في جلب الاختبارات. يرجى المحاولة مرة أخرى."
+        },
+        "createQuiz": {
+            "title": "إنشاء اختبار",
+            "subtitle": "إنشاء اختبار جديد مع الأسئلة والإجابات",
+            "saveAsDraft": "حفظ كمسودة",
+            "preview": "معاينة",
+            "publish": "نشر",
+            "publishing": "جاري النشر...",
+            "draftSaved": "تم حفظ المسودة بنجاح",
+            "saveDraftError": "فشل في حفظ المسودة",
+            "quizPublished": "تم نشر الاختبار بنجاح",
+            "publishError": "فشل في نشر الاختبار",
+            "form": {
+                "title": "عنوان الاختبار",
+                "titleDescription": "أعط اختبارك عنواناً وصفياً (الحد الأقصى 100 حرف)",
+                "description": "الوصف",
+                "descriptionDescription": "صف ما يدور حوله اختبارك (الحد الأقصى 500 حرف)",
+                "category": "الفئة",
+                "selectCategory": "اختر فئة",
+                "thumbnail": "الصورة المصغرة",
+                "thumbnailDescription": "قم بتحميل صورة مصغرة لاختبارك",
+                "active": "نشط",
+                "activeDescription": "اجعل هذا الاختبار متاحاً للمستخدمين",
+                "questions": "الأسئلة",
+                "addSingleChoice": "إضافة اختيار واحد",
+                "addMultipleChoice": "إضافة اختيارات متعددة",
+                "addLongAnswer": "إضافة إجابة طويلة",
+                "singleChoice": "سؤال اختيار واحد",
+                "multipleChoice": "سؤال اختيارات متعددة",
+                "longAnswer": "سؤال إجابة طويلة",
+                "questionText": "نص السؤال",
+                "questionPlaceholder": "أدخل سؤالك هنا",
+                "questionImage": "صورة السؤال",
+                "options": "خيارات الإجابة",
+                "addOption": "إضافة خيار",
+                "optionPlaceholder": "أدخل نص الخيار",
+                "dragAndDrop": "اسحب وأفلت الصورة هنا",
+                "dropHere": "أفلت الصورة هنا",
+                "or": "أو",
+                "browseFiles": "تصفح الملفات",
+                "referenceAnswer": "الإجابة المرجعية",
+                "referenceAnswerPlaceholder": "أدخل الإجابة المرجعية للتصحيح",
+                "referenceAnswerDescription": "سيتم استخدام هذه الإجابة كمرجع لتصحيح الإجابات الطويلة. قم بتضمين النقاط الرئيسية التي يجب أن تكون موجودة في الإجابة الصحيحة.",
+                "validation": {
+                    "titleRequired": "العنوان مطلوب",
+                    "descriptionRequired": "الوصف مطلوب",
+                    "categoryRequired": "الفئة مطلوبة",
+                    "minQuestions": "أضف سؤالاً واحداً على الأقل",
+                    "questionTextRequired": "نص السؤال مطلوب",
+                    "minOptions": "أضف خيارين على الأقل",
+                    "correctAnswer": "حدد إجابة صحيحة واحدة على الأقل"
+                }
+            },
+            "loading": "جاري التحميل...",
+            "backToEdit": "العودة للتحرير",
+            "question": "السؤال",
+            "previousQuestion": "السؤال السابق",
+            "nextQuestion": "السؤال التالي",
+            "longAnswerPlaceholder": "اكتب إجابتك هنا...",
+            "previewNotice": "وضع المعاينة: سيتم تطبيق التغييرات فقط عند حفظ الاختبار.",
+            "previewError": "خطأ في تحميل بيانات المعاينة. جاري إعادة التوجيه إلى المحرر."
+        },
         "header": {
             "landingPage": "الصفحة الرئيسية",
             "logout": "تسجيل الخروج",
@@ -100,6 +194,50 @@
         "emptyState": {
             "title": "لا توجد اختبارات بعد",
             "description": "قم بإنشاء أول اختبار للبدء"
+        },
+        "editQuiz": {
+            "title": "تحرير الاختبار",
+            "subtitle": "تحديث تفاصيل وأسئلة الاختبار",
+            "loadError": "فشل في تحميل بيانات الاختبار",
+            "deleteError": "فشل في حذف الاختبار",
+            "quizDeleted": "تم حذف الاختبار بنجاح",
+            "loading": "جاري التحميل...",
+            "deleteQuiz": "حذف الاختبار",
+            "deleteConfirm": "هل أنت متأكد أنك تريد حذف هذا الاختبار؟",
+            "form": {
+                "active": "نشط",
+                "activeDescription": "اجعل هذا الاختبار متاحًا للمستخدمين",
+                "title": "العنوان",
+                "titleDescription": "أعط اختبارك عنوانًا وصفيًا",
+                "description": "الوصف",
+                "descriptionDescription": "صف ما يدور حوله اختبارك",
+                "category": "الفئة",
+                "selectCategory": "اختر فئة",
+                "thumbnail": "الصورة المصغرة",
+                "thumbnailDescription": "قم بتحميل صورة مصغرة لاختبارك",
+                "questions": "الأسئلة",
+                "questionText": "نص السؤال",
+                "questionPlaceholder": "أدخل سؤالك هنا",
+                "questionImage": "صورة السؤال",
+                "options": "الخيارات",
+                "addOption": "إضافة خيار",
+                "optionPlaceholder": "أدخل نص الخيار",
+                "referenceAnswer": "الإجابة المرجعية",
+                "referenceAnswerPlaceholder": "أدخل الإجابة المرجعية",
+                "referenceAnswerDescription": "سيتم استخدام هذا لتقييم الإجابات الطويلة",
+                "singleChoice": "اختيار واحد",
+                "multipleChoice": "اختيارات متعددة",
+                "longAnswer": "إجابة طويلة",
+                "addSingleChoice": "إضافة اختيار واحد",
+                "addMultipleChoice": "إضافة اختيارات متعددة",
+                "addLongAnswer": "إضافة إجابة طويلة",
+                "dragAndDrop": "اسحب وأفلت الصورة هنا",
+                "dropHere": "أفلت الصورة هنا",
+                "or": "أو",
+                "browseFiles": "تصفح الملفات",
+                "uploading": "جاري التحميل...",
+                "imageUploadError": "فشل في تحميل الصورة"
+            }
         }
     }
 }
