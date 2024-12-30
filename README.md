@@ -60,6 +60,15 @@ NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
+Untuk mendapatkan nilai-nilai di atas:
+- Buka [Supabase Dashboard](https://supabase.com/dashboard)
+- Pilih proyek Anda
+- Klik tombol "Project Settings" (ikon roda gigi)
+- Di bagian "Project Settings > API", Anda akan menemukan:
+  - Project URL = `NEXT_PUBLIC_SUPABASE_URL`
+  - Project API keys > anon/public = `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- Salin dan tempel nilai-nilai tersebut ke file `.env.local`
+
 5. Setup database Supabase:
    
    a. Setup Supabase CLI:
@@ -213,6 +222,15 @@ cp .env.example .env.local
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
+
+To obtain these values:
+- Open [Supabase Dashboard](https://supabase.com/dashboard)
+- Select your project
+- Click "Project Settings" button (gear icon)
+- Under "Project Settings > API", you will find:
+  - Project URL = `NEXT_PUBLIC_SUPABASE_URL`
+  - Project API keys > anon/public = `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- Copy and paste these values into your `.env.local` file
 
 5. Setup Supabase database:
    
@@ -369,6 +387,15 @@ cp .env.example .env.local
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
+
+للحصول على هذه القيم:
+- افتح [لوحة تحكم Supabase](https://supabase.com/dashboard)
+- اختر مشروعك
+- انقر على زر "إعدادات المشروع" (أيقونة الترس)
+- في قسم "إعدادات المشروع > API"، ستجد:
+  - رابط المشروع = `NEXT_PUBLIC_SUPABASE_URL`
+  - مفاتيح API للمشروع > مفتاح مجهول/عام = `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- انسخ والصق هذه القيم في ملف `.env.local`
 
 5. إعداد قاعدة بيانات Supabase:
    
