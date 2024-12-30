@@ -86,6 +86,7 @@ export default function QuizPage() {
             try {
                 const supabase = createClient();
 
+                // Fetch quiz data
                 const { data: quizData, error: quizError } = await supabase
                     .from('quizzes')
                     .select(`
@@ -128,7 +129,7 @@ export default function QuizPage() {
                 });
 
                 setQuiz(quizData);
-            } catch (error) {
+            } catch {
                 toast.error(t("errors.loadError"));
             } finally {
                 setIsLoading(false);
@@ -243,7 +244,7 @@ export default function QuizPage() {
 
             toast.success(t("submitSuccess"));
             window.location.href = `/${params.locale}/quiz/${quiz.id}/results/${attemptData.id}`;
-        } catch (error) {
+        } catch {
             toast.error(t("errors.submitError"));
         } finally {
             setIsSubmitting(false);

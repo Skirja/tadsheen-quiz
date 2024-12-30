@@ -66,7 +66,7 @@ export default function QuizStatsPage() {
                 if (attemptsError) throw attemptsError;
 
                 setAttempts(attemptsData || []);
-            } catch (error) {
+            } catch {
                 toast.error(t("errors.loadError"));
             } finally {
                 setIsLoading(false);
@@ -84,7 +84,7 @@ export default function QuizStatsPage() {
 
             await navigator.clipboard.writeText(quizUrl);
             toast.success(t("shareSuccess"));
-        } catch (error) {
+        } catch {
             toast.error(t("errors.shareError"));
         }
     };

@@ -51,12 +51,6 @@ interface DatabaseQuizAttempt {
     quiz: DatabaseQuiz;
 }
 
-interface DatabaseQuizCategory {
-    id: string;
-    name: string;
-    quizzes: DatabaseQuiz[];
-}
-
 interface Category {
     id: string;
     name: string;
@@ -94,7 +88,18 @@ export default function LandingPage() {
     }, []);
 
     useEffect(() => {
+        if (!isSearching) {
+            setSearchResults([]);
+        }
+    }, [isSearching]);
+
+    useEffect(() => {
         const fetchQuizzes = async () => {
+            // Skip fetching if we're in search mode
+            if (isSearching) {
+                return;
+            }
+
             try {
                 const supabase = createClient();
 
@@ -165,7 +170,7 @@ export default function LandingPage() {
                     if (categories) {
                         // Group quizzes by category
                         const quizzesByCategory = categories.map(category => {
-                            const categoryQuizzes = (activeQuizzes as any[])
+                            const categoryQuizzes = (activeQuizzes as DatabaseQuiz[])
                                 .filter(quiz => quiz.category_id === category.id)
                                 .map(quiz => ({
                                     id: quiz.id,
@@ -180,7 +185,7 @@ export default function LandingPage() {
                                         quiz_attempts: quiz.total_attempts
                                     }
                                 } as DatabaseQuiz))
-                                .slice(0, 4); // Get top 4 quizzes per category
+                                .slice(0, 4);
 
                             return {
                                 id: category.id,
@@ -192,19 +197,19 @@ export default function LandingPage() {
                         // Only keep categories that have quizzes
                         const categoriesWithQuizzes = quizzesByCategory
                             .filter(category => category.quizzes.length > 0)
-                            .slice(0, 4); // Get top 4 categories
+                            .slice(0, 4);
 
                         setPopularCategories(categoriesWithQuizzes);
                     }
                 }
-            } catch (error) {
+            } catch {
             } finally {
                 setIsLoading(false);
             }
         };
 
         fetchQuizzes();
-    }, [user]); // Re-fetch when user changes
+    }, [user, isSearching]);
 
     const handleSearch = async (query: string) => {
         if (!query.trim()) {
@@ -216,10 +221,10 @@ export default function LandingPage() {
         setIsSearching(true);
         try {
             const supabase = createClient();
-            const searchTerm = `%${query}%`;
+            const searchTerm = query.trim();
 
-            // Search in quizzes table with title match or creator's name match
-            const { data: searchData, error } = await supabase
+            // Search in quizzes table with title match
+            const { data: searchData } = await supabase
                 .from('quizzes')
                 .select(`
                     id,
@@ -233,10 +238,8 @@ export default function LandingPage() {
                 `)
                 .eq('is_active', true)
                 .eq('status', 'published')
-                .ilike('title', searchTerm)
+                .ilike('title', `%${searchTerm}%`)
                 .order('total_attempts', { ascending: false });
-
-            if (error) throw error;
 
             const formattedResults = (searchData || []).map(quiz => ({
                 id: quiz.id,
@@ -252,7 +255,8 @@ export default function LandingPage() {
             }));
 
             setSearchResults(formattedResults);
-        } catch (error) {
+        } catch {
+            // Handle error silently
             setSearchResults([]);
         }
     };
