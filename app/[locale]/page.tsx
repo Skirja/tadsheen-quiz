@@ -70,6 +70,8 @@ export default function LandingPage() {
     const locale = params.locale as string;
     const [recentQuizzes, setRecentQuizzes] = useState<Quiz[]>([]);
     const [popularCategories, setPopularCategories] = useState<Category[]>([]);
+    const [searchResults, setSearchResults] = useState<Quiz[]>([]);
+    const [isSearching, setIsSearching] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [user, setUser] = useState<User | null>(null);
 
@@ -196,7 +198,6 @@ export default function LandingPage() {
                     }
                 }
             } catch (error) {
-                console.error('Error fetching quizzes:', error);
             } finally {
                 setIsLoading(false);
             }
@@ -205,9 +206,55 @@ export default function LandingPage() {
         fetchQuizzes();
     }, [user]); // Re-fetch when user changes
 
-    const handleSearch = (query: string) => {
-        // Implement search functionality
-        console.log("Searching for:", query);
+    const handleSearch = async (query: string) => {
+        if (!query.trim()) {
+            setIsSearching(false);
+            setSearchResults([]);
+            return;
+        }
+
+        setIsSearching(true);
+        try {
+            const supabase = createClient();
+            const searchTerm = `%${query}%`;
+
+            // Search in quizzes table with title match or creator's name match
+            const { data: searchData, error } = await supabase
+                .from('quizzes')
+                .select(`
+                    id,
+                    title,
+                    description,
+                    thumbnail_url,
+                    is_active,
+                    created_at,
+                    questions!inner (id),
+                    total_attempts
+                `)
+                .eq('is_active', true)
+                .eq('status', 'published')
+                .ilike('title', searchTerm)
+                .order('total_attempts', { ascending: false });
+
+            if (error) throw error;
+
+            const formattedResults = (searchData || []).map(quiz => ({
+                id: quiz.id,
+                title: quiz.title,
+                description: quiz.description,
+                thumbnail_url: quiz.thumbnail_url,
+                is_active: quiz.is_active,
+                created_at: quiz.created_at,
+                questions: quiz.questions || [],
+                _count: {
+                    quiz_attempts: quiz.total_attempts || 0
+                }
+            }));
+
+            setSearchResults(formattedResults);
+        } catch (error) {
+            setSearchResults([]);
+        }
     };
 
     const handleStartQuiz = (quizId: string, name?: string) => {
@@ -243,8 +290,30 @@ export default function LandingPage() {
 
             {/* Main Content */}
             <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-                {/* Recent Quizzes Section - Only show if user has taken quizzes */}
-                {recentQuizzes.length > 0 && (
+                {/* Search Results */}
+                {isSearching && (
+                    <section className="mb-12">
+                        <h2 className="mb-6 text-2xl font-bold">
+                            {searchResults.length > 0 ? t("sections.searchResults.title") : t("sections.searchResults.noResults")}
+                        </h2>
+                        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                            {searchResults.map((quiz) => (
+                                <QuizCard
+                                    key={quiz.id}
+                                    title={quiz.title}
+                                    thumbnail={quiz.thumbnail_url || '/images/placeholder.jpg'}
+                                    questionsCount={quiz.questions.length}
+                                    attemptsCount={quiz._count.quiz_attempts}
+                                    onStart={(name) => handleStartQuiz(quiz.id, name)}
+                                    isLoggedIn={!!user}
+                                />
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {/* Recent Quizzes Section - Only show if user has taken quizzes and not searching */}
+                {!isSearching && recentQuizzes.length > 0 && (
                     <section className="mb-12">
                         <h2 className="mb-6 text-2xl font-bold">
                             {t("sections.recentQuizzes.title")}
@@ -266,8 +335,8 @@ export default function LandingPage() {
                     </section>
                 )}
 
-                {/* Popular Categories Sections */}
-                {!isLoading && popularCategories.map((category) => (
+                {/* Popular Categories Sections - Only show if not searching */}
+                {!isSearching && !isLoading && popularCategories.map((category) => (
                     <section key={category.id} className="mb-12">
                         <h2 className="mb-6 text-2xl font-bold">
                             {category.name}

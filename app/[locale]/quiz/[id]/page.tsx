@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import { toast } from "sonner";
 import { User } from "@supabase/supabase-js";
@@ -46,13 +48,13 @@ export default function QuizPage() {
     const params = useParams();
     const searchParams = useSearchParams();
     const quizId = params.id as string;
-    const userName = searchParams.get('name');
-
     const [quiz, setQuiz] = useState<Quiz | null>(null);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [userAnswers, setUserAnswers] = useState<UserAnswers>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [showStartDialog, setShowStartDialog] = useState(!searchParams.get('name'));
+    const [userName, setUserName] = useState(searchParams.get('name') || "");
     const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
@@ -61,6 +63,9 @@ export default function QuizPage() {
         // Get initial auth state
         supabase.auth.getSession().then(({ data: { session } }) => {
             setUser(session?.user ?? null);
+            if (session?.user) {
+                setUserName(session.user.user_metadata.full_name || "");
+            }
         });
 
         // Listen for auth changes
@@ -68,6 +73,9 @@ export default function QuizPage() {
             data: { subscription },
         } = supabase.auth.onAuthStateChange((_event, session) => {
             setUser(session?.user ?? null);
+            if (session?.user) {
+                setUserName(session.user.user_metadata.full_name || "");
+            }
         });
 
         return () => subscription.unsubscribe();
@@ -121,7 +129,6 @@ export default function QuizPage() {
 
                 setQuiz(quizData);
             } catch (error) {
-                console.error('Error fetching quiz:', error);
                 toast.error(t("errors.loadError"));
             } finally {
                 setIsLoading(false);
@@ -130,6 +137,14 @@ export default function QuizPage() {
 
         fetchQuiz();
     }, [quizId, t]);
+
+    const handleStartQuiz = () => {
+        if (!userName.trim()) {
+            toast.error(t("errors.nameRequired"));
+            return;
+        }
+        setShowStartDialog(false);
+    };
 
     const handleAnswerChange = (questionId: string, answer: string | string[]) => {
         setUserAnswers(prev => ({
@@ -145,7 +160,6 @@ export default function QuizPage() {
             setIsSubmitting(true);
             const supabase = createClient();
 
-            // Create quiz attempt first
             const { data: attemptData, error: attemptError } = await supabase
                 .from('quiz_attempts')
                 .insert({
@@ -159,20 +173,12 @@ export default function QuizPage() {
                 .select('id')
                 .single();
 
-            if (attemptError) {
-                console.error('Attempt error:', attemptError);
-                throw attemptError;
-            }
+            if (attemptError) throw attemptError;
+            if (!attemptData) throw new Error('Failed to create quiz attempt');
 
-            if (!attemptData) {
-                throw new Error('Failed to create quiz attempt');
-            }
-
-            // Calculate score first
             const totalPoints = quiz.questions.reduce((sum, q) => sum + q.points, 0);
             let earnedPoints = 0;
 
-            // Prepare responses
             const responses = quiz.questions.map(question => {
                 const userAnswer = userAnswers[question.id];
 
@@ -191,7 +197,6 @@ export default function QuizPage() {
                     const isFullyCorrect = correctAnswers.length === answers.length &&
                         correctAnswers.every(id => answers.includes(id));
 
-                    // Create a response for each selected answer
                     return answers.map(answerId => ({
                         attempt_id: attemptData.id,
                         question_id: question.id,
@@ -200,7 +205,7 @@ export default function QuizPage() {
                         is_correct: correctAnswers.includes(answerId),
                         points_earned: isFullyCorrect ? question.points : 0
                     }));
-                } else { // single choice
+                } else {
                     const answerId = userAnswer as string;
                     const isCorrect = question.answers?.find(a => a.id === answerId)?.is_correct || false;
                     if (isCorrect) {
@@ -218,19 +223,14 @@ export default function QuizPage() {
                 }
             }).flat();
 
-            // Insert all responses
             const { error: responsesError } = await supabase
                 .from('quiz_responses')
                 .insert(responses);
 
-            if (responsesError) {
-                console.error('Responses error:', responsesError);
-                throw responsesError;
-            }
+            if (responsesError) throw responsesError;
 
             const score = Math.round((earnedPoints / totalPoints) * 100);
 
-            // Update attempt with score
             const { error: updateError } = await supabase
                 .from('quiz_attempts')
                 .update({
@@ -239,16 +239,11 @@ export default function QuizPage() {
                 })
                 .eq('id', attemptData.id);
 
-            if (updateError) {
-                console.error('Update error:', updateError);
-                throw updateError;
-            }
+            if (updateError) throw updateError;
 
             toast.success(t("submitSuccess"));
-            // Redirect to results page
             window.location.href = `/${params.locale}/quiz/${quiz.id}/results/${attemptData.id}`;
         } catch (error) {
-            console.error('Error submitting quiz:', error);
             toast.error(t("errors.submitError"));
         } finally {
             setIsSubmitting(false);
@@ -272,6 +267,31 @@ export default function QuizPage() {
                     <h1 className="text-2xl font-bold">{t("errors.notFound")}</h1>
                 </div>
             </div>
+        );
+    }
+
+    if (showStartDialog) {
+        return (
+            <Dialog open={showStartDialog} onOpenChange={setShowStartDialog}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>{quiz.title}</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                        <p className="text-muted-foreground">{quiz.description}</p>
+                        {!user && (
+                            <Input
+                                placeholder={t("enterName")}
+                                value={userName}
+                                onChange={(e) => setUserName(e.target.value)}
+                            />
+                        )}
+                        <Button className="w-full" onClick={handleStartQuiz}>
+                            {t("startQuiz")}
+                        </Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
         );
     }
 

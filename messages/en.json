@@ -1,13 +1,17 @@
 {
     "landing": {
         "search": {
-            "placeholder": "Search quizzes by title or creator"
+            "placeholder": "Search quizzes by title"
         },
         "buttons": {
             "createQuiz": "Create Quiz",
             "login": "Login"
         },
         "sections": {
+            "searchResults": {
+                "title": "Search Results",
+                "noResults": "No quizzes found"
+            },
             "recentQuizzes": {
                 "title": "Your Recent Quizzes",
                 "noQuizzes": "You haven't taken any quizzes yet"
@@ -33,10 +37,13 @@
         "submitting": "Submitting...",
         "submitSuccess": "Quiz submitted successfully!",
         "longAnswerPlaceholder": "Type your answer here...",
+        "startQuiz": "Start Quiz",
+        "enterName": "Enter your full name",
         "errors": {
             "loadError": "Failed to load quiz. Please try again.",
             "submitError": "Failed to submit quiz. Please try again.",
-            "notFound": "Quiz not found"
+            "notFound": "Quiz not found",
+            "nameRequired": "Please enter your full name"
         }
     },
     "quizResults": {
@@ -116,6 +123,23 @@
         "createQuiz": "Create Quiz",
         "error": {
             "fetchQuizzes": "Failed to fetch quizzes. Please try again."
+        },
+        "stats": {
+            "loading": "Loading statistics...",
+            "totalAttempts": "{count} participants have completed this quiz",
+            "noAttempts": "No one has completed this quiz yet",
+            "shareQuiz": "Share Quiz",
+            "shareSuccess": "Quiz URL copied to clipboard!",
+            "table": {
+                "participant": "Participant",
+                "score": "Score",
+                "completedAt": "Completed At"
+            },
+            "errors": {
+                "loadError": "Failed to load statistics. Please try again.",
+                "notFound": "Quiz not found",
+                "shareError": "Failed to copy quiz URL. Please try again."
+            }
         },
         "header": {
             "landingPage": "Landing Page",
@@ -205,6 +229,7 @@
             "loading": "Loading...",
             "deleteQuiz": "Delete Quiz",
             "deleteConfirm": "Are you sure you want to delete this quiz?",
+            "quizPublished": "Quiz published successfully",
             "form": {
                 "active": "Active",
                 "activeDescription": "Make this quiz available to users",
