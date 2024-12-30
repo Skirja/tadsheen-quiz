@@ -5,7 +5,8 @@
         },
         "buttons": {
             "createQuiz": "Create Quiz",
-            "login": "Login"
+            "login": "Login",
+            "viewAll": "View All Quizzes"
         },
         "sections": {
             "searchResults": {
@@ -17,7 +18,8 @@
                 "noQuizzes": "You haven't taken any quizzes yet"
             },
             "popularCategories": {
-                "title": "Popular Categories"
+                "title": "Popular Categories",
+                "viewAll": "View All"
             }
         },
         "quizCard": {
@@ -26,6 +28,10 @@
             "startQuiz": "Start Quiz",
             "enterName": "Enter your full name",
             "start": "Start"
+        },
+        "categoryPage": {
+            "backToHome": "Back to Home",
+            "noQuizzes": "No quizzes found in this category"
         }
     },
     "quiz": {

@@ -352,10 +352,17 @@ export default function LandingPage() {
 
                 {/* Popular Categories Sections - Only show if not searching */}
                 {!isSearching && !isLoading && popularCategories.map((category) => (
-                    <section key={category.id} className="mb-12">
-                        <h2 className="mb-6 text-2xl font-bold">
-                            {category.name}
-                        </h2>
+                    <div key={category.id} className="space-y-4">
+                        <div className="flex items-center justify-between">
+                            <h2 className="text-2xl font-bold">{category.name}</h2>
+                            <Button
+                                variant="ghost"
+                                onClick={() => router.push(`/${locale}/category/${category.id}`)}
+                                className="text-primary hover:text-primary/80"
+                            >
+                                {t("sections.popularCategories.viewAll")}
+                            </Button>
+                        </div>
                         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                             {category.quizzes.map((quiz) => (
                                 <QuizCard
@@ -369,7 +376,7 @@ export default function LandingPage() {
                                 />
                             ))}
                         </div>
-                    </section>
+                    </div>
                 ))}
             </main>
         </div>

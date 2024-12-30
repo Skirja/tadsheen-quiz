@@ -5,7 +5,8 @@
         },
         "buttons": {
             "createQuiz": "إنشاء اختبار",
-            "login": "تسجيل الدخول"
+            "login": "تسجيل الدخول",
+            "viewAll": "عرض جميع الاختبارات"
         },
         "sections": {
             "searchResults": {
@@ -17,7 +18,8 @@
                 "noQuizzes": "لم تقم بأي اختبارات بعد"
             },
             "popularCategories": {
-                "title": "الفئات الشائعة"
+                "title": "الفئات الشائعة",
+                "viewAll": "عرض الكل"
             }
         },
         "quizCard": {
@@ -26,6 +28,10 @@
             "startQuiz": "ابدأ الاختبار",
             "enterName": "أدخل اسمك الكامل",
             "start": "ابدأ"
+        },
+        "categoryPage": {
+            "backToHome": "العودة للرئيسية",
+            "noQuizzes": "لا توجد اختبارات في هذه الفئة"
         }
     },
     "quiz": {
