@@ -1,21 +1,20 @@
 import createNextIntlPlugin from 'next-intl/plugin';
 
-const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
+const withNextIntl = createNextIntlPlugin();
 
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+const config = {
+    experimental: {
+        serverActions: true
+    },
     images: {
         remotePatterns: [
             {
                 protocol: 'https',
-                hostname: 'kbmdzgdrbmueewwhsmth.supabase.co',
-                pathname: '/storage/v1/object/public/**',
+                hostname: '**',
             },
         ],
     },
-    experimental: {
-        missingSuspenseWithCSRError: false
-    }
 };
 
-export default withNextIntl(nextConfig);
+export default withNextIntl(config);

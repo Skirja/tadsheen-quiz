@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState, Suspense } from "react";
 import { useTranslations } from "next-intl";
 import { DashboardHeader } from "@/components/dashboard/header";
 import { QuizForm } from "@/components/quiz-builder/quiz-form";
@@ -7,7 +8,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
 import { createClient } from "@/utils/supabase/client";
-import { useEffect, useState } from "react";
 
 interface FormData {
     title: string;
@@ -32,7 +32,7 @@ interface FormData {
     previewId?: string;
 }
 
-export default function CreateQuizPage() {
+function CreateQuizContent() {
     const t = useTranslations("dashboard.createQuiz");
     const router = useRouter();
     const params = useParams();
@@ -330,5 +330,22 @@ export default function CreateQuizPage() {
                 />
             </main>
         </div>
+    );
+}
+
+export default function CreateQuizPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-background">
+                <DashboardHeader />
+                <main className="container mx-auto px-4 py-8">
+                    <div className="flex min-h-[400px] items-center justify-center">
+                        <p className="text-lg text-muted-foreground">Loading...</p>
+                    </div>
+                </main>
+            </div>
+        }>
+            <CreateQuizContent />
+        </Suspense>
     );
 } 

@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 
-export default function AuthCallbackPage() {
+function CallbackContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const t = useTranslations("auth");
@@ -84,5 +84,20 @@ export default function AuthCallbackPage() {
                 <p className="mt-2 text-muted-foreground">{t("signUp.verifyingEmail")}</p>
             </div>
         </div>
+    );
+}
+
+export default function AuthCallbackPage() {
+    return (
+        <Suspense fallback={
+            <div className="flex min-h-screen items-center justify-center">
+                <div className="text-center">
+                    <h1 className="text-2xl font-bold">Loading...</h1>
+                    <p className="mt-2 text-muted-foreground">Verifying your session...</p>
+                </div>
+            </div>
+        }>
+            <CallbackContent />
+        </Suspense>
     );
 } 

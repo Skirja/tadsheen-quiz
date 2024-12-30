@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useTranslations } from "next-intl";
 import { DashboardHeader } from "@/components/dashboard/header";
 import { Button } from "@/components/ui/button";
@@ -35,7 +35,7 @@ interface QuizPreview {
     questions: Question[];
 }
 
-export default function PreviewQuizPage() {
+function PreviewQuizContent() {
     const t = useTranslations("dashboard.createQuiz");
     const router = useRouter();
     const params = useParams();
@@ -246,5 +246,22 @@ export default function PreviewQuizPage() {
                 </div>
             </main>
         </div>
+    );
+}
+
+export default function PreviewQuizPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-background">
+                <DashboardHeader />
+                <main className="container mx-auto px-4 py-8">
+                    <div className="flex min-h-[400px] items-center justify-center">
+                        <p className="text-lg text-muted-foreground">Loading...</p>
+                    </div>
+                </main>
+            </div>
+        }>
+            <PreviewQuizContent />
+        </Suspense>
     );
 } 
